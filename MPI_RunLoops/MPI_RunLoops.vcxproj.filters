@@ -29,7 +29,7 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MPI_RunLoops.cpp">
+    <ClCompile Include="MPI_PIMonteCarlo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

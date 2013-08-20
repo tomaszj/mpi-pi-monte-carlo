@@ -14,6 +14,7 @@
     <ProjectGuid>{3EC8087A-9B51-45C1-A600-35FB35E0C404}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>MPI_RunLoops</RootNamespace>
+    <ProjectName>MPI_PIMonteCarlo</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -84,7 +85,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="MPI_RunLoops.cpp" />
+    <ClCompile Include="MPI_PIMonteCarlo.cpp" />
     <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

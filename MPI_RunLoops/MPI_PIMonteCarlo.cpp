@@ -6,14 +6,15 @@
 #include <mpi.h>
 #include <time.h>
 
-#define LOOPS_COUNT 100
+#define LOOPS_COUNT 1000
+#define ITERATIONS_IN_LOOP 100000
 #define TASK_TAG 1024
 #define DIE_TAG 666
 
 
 using namespace std;
 
-int process_loops(int loops);
+long calculate_hits(int iterations);
 void main_process(int world_size);
 void worker_process(int rank, int world_size);
 
@@ -21,6 +22,9 @@ int main(int argc, char* argv[])
 {
     clock_t tic = clock();
 
+    // Seed the random generator for the process
+    srand(time(NULL));
+    
     MPI_Init(&argc, &argv);
 
     int world_size;
@@ -56,13 +60,15 @@ void main_process(int world_size)
 
     int sent_work_count = 0;
     int received_work_count = 0;
-    long long total_processed_loops = 0;
+    
+    long long total_attempts = 0;
+    long long total_hits = 0;
 
     // Distribute initial work
     for (int i = 1; i < world_size; i++)
     {
         MPI_Send(&sent_work_count, 1, MPI_INT, i, TASK_TAG, MPI_COMM_WORLD); 
-        cout << "[Manager] Sent work #" << sent_work_count << " to #" << i << endl;
+        //cout << "[Manager] Sent work #" << sent_work_count << " to #" << i << endl;
             
         sent_work_count++;
     }
@@ -70,19 +76,18 @@ void main_process(int world_size)
     // Wait for incoming responses and deal remaining work
     while (received_work_count < LOOPS_COUNT)
     {
-        long processed_loops;
+        int work_results[2];
         MPI_Status status;
-        MPI_Recv(&processed_loops, 1, MPI_LONG, MPI_ANY_SOURCE, TASK_TAG, MPI_COMM_WORLD, &status);
+        MPI_Recv(work_results, 2, MPI_LONG, MPI_ANY_SOURCE, TASK_TAG, MPI_COMM_WORLD, &status);
 
         received_work_count++;
-        total_processed_loops += processed_loops;
-
-        cout << "[Manager] " << processed_loops << " loops from worker #" << status.MPI_SOURCE << endl;
+        total_attempts += work_results[0];
+        total_hits += work_results[1];
 
         if (sent_work_count < LOOPS_COUNT)
         {
             MPI_Send(&sent_work_count, 1, MPI_INT, status.MPI_SOURCE, TASK_TAG, MPI_COMM_WORLD);
-            cout << "[Manager] Sent work #" << sent_work_count << " to #" << status.MPI_SOURCE << endl;
+            //cout << "[Manager] Sent work #" << sent_work_count << " to #" << status.MPI_SOURCE << endl;
 
             sent_work_count++;
         }
@@ -95,7 +100,9 @@ void main_process(int world_size)
         MPI_Send(&kill_message, 1, MPI_INT, i, DIE_TAG, MPI_COMM_WORLD);
     }
 
-    cout << "[Manager] Finished work with " << total_processed_loops << " processed loops" << endl;
+    double calculated_pi_value = 4.0 * total_hits / total_attempts;
+
+    cout << "[Manager] Finished work with calculated PI: " << calculated_pi_value << "." << endl;
 }
 
 void worker_process(int rank, int world_size)
@@ -111,13 +118,13 @@ void worker_process(int rank, int world_size)
 
         if (status.MPI_TAG == TASK_TAG)
         {
-            int current_loop_id = (int)received_data;
-            cout << "[Worker #" << rank << "] Received work #" << current_loop_id << endl;
-            int loops_to_perform = current_loop_id * 5000000;
-            long result = process_loops(loops_to_perform);
+            int current_work_id = (int)received_data;
+            //cout << "[Worker #" << rank << "] Received work #" << current_work_id << endl;
+            long hits = calculate_hits(ITERATIONS_IN_LOOP);
 
-            MPI_Send(&result, 1, MPI_LONG, 0, TASK_TAG, MPI_COMM_WORLD);
-            cout << "[Worker #" << rank << "] Sent " << result << " loops as work #" << current_loop_id << endl;
+            int result_array[2] = {ITERATIONS_IN_LOOP, hits};
+            MPI_Send(result_array, 2, MPI_LONG, 0, TASK_TAG, MPI_COMM_WORLD);
+            //cout << "[Worker #" << rank << "] Sent work #" << current_work_id << endl;
         }
         else if (status.MPI_TAG == DIE_TAG)
         {
@@ -132,13 +139,20 @@ void worker_process(int rank, int world_size)
     }
 }
 
-int process_loops(int loops)
+long calculate_hits(int iterations)
 {
-    int i;
-    for (i = 0; i < loops; i++)
+    long i;
+    long hits = 0;
+    for (i = 0; i < iterations; i++)
     {
-        i++;
+        double x = (double)rand() / RAND_MAX;
+        double y = (double)rand() / RAND_MAX;
+        
+        if (x * x + y * y <= 1.0)
+        {
+            hits++;
+        }
     }
 
-    return i;
+    return hits;
 }
