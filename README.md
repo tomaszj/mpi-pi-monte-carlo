@@ -7,6 +7,6 @@ The best performance is achieved when the number of nodes is equal to number of 
 
     > mpiexec.exe -n 8 MPI_PIMonteCarlo.exe
     
-The program performs by default 1 000 iterations with 10 000 hit attempts each. You can change the number of iterations by passing a parameter to the program:
+The program performs by default 1 000 iterations with 100 000 hit attempts each. You can change the number of iterations by passing a parameter to the program:
 
     > mpiexec.exe -n 4 MPI_PIMonteCarlo.exe 5000
