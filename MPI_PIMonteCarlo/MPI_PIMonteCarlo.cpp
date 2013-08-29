@@ -3,9 +3,10 @@
 // By Tomasz Janeczko (2013)
 
 #include "stdafx.h"
-#include <cassert>
 #include <mpi.h>
-#include <ctime>
+
+#include <cassert>
+#include <random>
 #include <iomanip>
 
 #define DEFAULT_ITERATIONS_COUNT 1000
@@ -38,7 +39,8 @@ int main(int argc, char* argv[])
     }
 
     // Randomize
-    srand(time(NULL));
+    random_device rd;
+    srand(rd());
 
     // Initialize MPI and basic variables
     MPI_Init(&argc, &argv);
@@ -135,12 +137,12 @@ void perform_process(long total_iterations, int current_rank, int world_size)
 
 long calculate_hits(int iterations)
 {
-    long i;
-    long hits = 0;
+    int i;
+    int hits = 0;
     for (i = 0; i < iterations; i++)
     {
-        double x = (double)rand() / RAND_MAX;
-        double y = (double)rand() / RAND_MAX;
+        double x = (double)rand() / (RAND_MAX + 1);
+        double y = (double)rand() / (RAND_MAX + 1);
         
         if (x * x + y * y <= 1.0)
         {
