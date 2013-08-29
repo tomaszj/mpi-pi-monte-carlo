@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual C++ Express 2010
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MPI_RunLoops", "MPI_RunLoops\MPI_RunLoops.vcxproj", "{3EC8087A-9B51-45C1-A600-35FB35E0C404}"
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MPI_PIMonteCarlo", "MPI_PIMonteCarlo\MPI_PIMonteCarlo.vcxproj", "{FC3F7349-44A7-438C-977B-29C8AD685135}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,10 +9,10 @@ Global
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{3EC8087A-9B51-45C1-A600-35FB35E0C404}.Debug|Win32.ActiveCfg = Debug|Win32
-		{3EC8087A-9B51-45C1-A600-35FB35E0C404}.Debug|Win32.Build.0 = Debug|Win32
-		{3EC8087A-9B51-45C1-A600-35FB35E0C404}.Release|Win32.ActiveCfg = Release|Win32
-		{3EC8087A-9B51-45C1-A600-35FB35E0C404}.Release|Win32.Build.0 = Release|Win32
+		{FC3F7349-44A7-438C-977B-29C8AD685135}.Debug|Win32.ActiveCfg = Debug|Win32
+		{FC3F7349-44A7-438C-977B-29C8AD685135}.Debug|Win32.Build.0 = Debug|Win32
+		{FC3F7349-44A7-438C-977B-29C8AD685135}.Release|Win32.ActiveCfg = Release|Win32
+		{FC3F7349-44A7-438C-977B-29C8AD685135}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
