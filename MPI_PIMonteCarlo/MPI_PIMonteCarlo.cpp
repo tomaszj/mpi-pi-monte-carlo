@@ -15,6 +15,10 @@
 
 using namespace std;
 
+// Random stuff
+mt19937 mt_engine;
+uniform_real_distribution<double> real_distribution;
+
 long calculate_hits(int iterations);
 void perform_process(long total_iterations, int current_rank, int world_size);
 
@@ -40,7 +44,7 @@ int main(int argc, char* argv[])
 
     // Randomize
     random_device rd;
-    srand(rd());
+    mt_engine.seed(rd());
 
     // Initialize MPI and basic variables
     MPI_Init(&argc, &argv);
@@ -104,8 +108,13 @@ void perform_process(long total_iterations, int current_rank, int world_size)
     long long total_hits = 0;
     for (int i = 0; i < iterations; i++)
     {
-        long result = calculate_hits(LOOPS_IN_ITERATION);
+        int result = calculate_hits(LOOPS_IN_ITERATION);
         total_hits += result;
+
+        if (current_rank == 0 && i % 256 == 0)
+        {
+            cout << "[Node #0] " << (100 * i) / iterations << "% done" << endl;
+        }
     }
 
     // Gather incoming responses
@@ -141,8 +150,8 @@ long calculate_hits(int iterations)
     int hits = 0;
     for (i = 0; i < iterations; i++)
     {
-        double x = (double)rand() / (RAND_MAX + 1);
-        double y = (double)rand() / (RAND_MAX + 1);
+        double x = (double)real_distribution(mt_engine);
+        double y = (double)real_distribution(mt_engine);
         
         if (x * x + y * y <= 1.0)
         {
